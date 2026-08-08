@@ -78,14 +78,30 @@ jobs:
       #       -destination "platform=tvOS Simulator,name=${{ env.TVOS_SIMULATOR_DEVICE }},OS=${{ env.TVOS_SIMULATOR_OS }}" \
       #       | xcpretty
       
-      # - name: macOS Unit Tests
-      #   run: |
-      #     set -o pipefail && xcodebuild test \
-      #       -workspace PinLayout.xcworkspace \
-      #       -scheme PinLayout-macOS \
-      #       -sdk macosx \
-      #       -destination "platform=macOS,name=Any Mac" \
-      #       | xcpretty
+      - name: macOS Unit Tests
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -workspace PinLayout.xcworkspace \
+            -scheme Pods-PinLayoutTests-macOS \
+            -sdk macosx \
+            -destination "platform=macOS,arch=$(uname -m)" \
+            -derivedDataPath /tmp/PinLayout-macOS \
+            | xcpretty
+          xcodebuild build \
+            -workspace PinLayout.xcworkspace \
+            -scheme PinLayout-macOS \
+            -sdk macosx \
+            -destination "platform=macOS,arch=$(uname -m)" \
+            -derivedDataPath /tmp/PinLayout-macOS \
+            | xcpretty
+          xcodebuild test \
+            -workspace PinLayout.xcworkspace \
+            -scheme PinLayout-macOS \
+            -sdk macosx \
+            -destination "platform=macOS,arch=$(uname -m)" \
+            -derivedDataPath /tmp/PinLayout-macOS \
+            | xcpretty
 
       - name: Test CocoaPods Integration
         run: |
