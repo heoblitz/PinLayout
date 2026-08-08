@@ -143,17 +143,17 @@ jobs:
             | xcpretty
           cd ../../..
       
-      # - name: Test CocoaPods tvOS Integration
-      #   run: |
-      #     cd TestProjects/cocoapods/tvos
-      #     pod install
-      #     set -o pipefail && xcodebuild build \
-      #       -workspace PinLayout-tvOS.xcworkspace \
-      #       -scheme PinLayout-tvOS \
-      #       -sdk appletvsimulator \
-      #       -destination "platform=tvOS Simulator,name=${{ env.TVOS_SIMULATOR_DEVICE }},OS=${{ env.TVOS_SIMULATOR_OS }}" \
-      #       | xcpretty
-      #     cd ../../..
+      - name: Test CocoaPods tvOS Integration
+        run: |
+          cd TestProjects/cocoapods/tvos
+          pod install
+          set -o pipefail && xcodebuild build \
+            -workspace PinLayout-tvOS.xcworkspace \
+            -scheme PinLayout-tvOS \
+            -sdk appletvsimulator \
+            -destination "platform=tvOS Simulator,name=${{ env.TVOS_SIMULATOR_DEVICE }},OS=${{ env.TVOS_SIMULATOR_OS }}" \
+            | xcpretty
+          cd ../../..
 
       - name: Test Carthage Integration
         run: |
