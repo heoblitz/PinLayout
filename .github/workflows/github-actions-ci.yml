@@ -132,16 +132,16 @@ jobs:
             | xcpretty
           cd ../../..
 
-      # - name: Test CocoaPods macOS Integration
-      #   run: |
-      #     cd TestProjects/cocoapods/macos
-      #     pod install
-      #     set -o pipefail && xcodebuild build \
-      #       -workspace PinLayout-macOS.xcworkspace \
-      #       -scheme PinLayout-macOS \
-      #       -sdk macosx \
-      #       | xcpretty
-      #     cd ../../..
+      - name: Test CocoaPods macOS Integration
+        run: |
+          cd TestProjects/cocoapods/macos
+          pod install
+          set -o pipefail && xcodebuild build \
+            -workspace PinLayout-macOS.xcworkspace \
+            -scheme PinLayout-macOS \
+            -sdk macosx \
+            | xcpretty
+          cd ../../..
       
       # - name: Test CocoaPods tvOS Integration
       #   run: |
