@@ -4,9 +4,9 @@ on: [push, pull_request]
 env:
   XCODE_VERSION: "16.4.0"
   IOS_SIMULATOR_DEVICE: "iPhone 16"
-  IOS_SIMULATOR_OS: "18.4"
+  IOS_SIMULATOR_OS: "26.2"
   TVOS_SIMULATOR_DEVICE: "Apple TV 4K (3rd generation)"
-  TVOS_SIMULATOR_OS: "18.4"
+  TVOS_SIMULATOR_OS: "26.2"
 
 jobs:
   CI:
