@@ -135,8 +135,16 @@ extension PinLayout {
         }
 
         if Pin.autoSizingInProgress, let autoSizeCalculable = view as? AutoSizeCalculable {
-            let marginInsets = PEdgeInsets(top: -_marginTop, left: -_marginLeft, bottom: -_marginBottom, right: -_marginRight)
-            autoSizeCalculable.setAutoSizingRect(newRect, margins: marginInsets)
+            let superviewRect = view.superview?.getRect(keepTransform: keepTransform)
+            let bottomOffset = superviewRect.map { $0.height - (_bottom ?? $0.height) } ?? 0
+            let rightOffset = superviewRect.map { $0.width - (_right ?? $0.width) } ?? 0
+            let autoSizingInsets = PEdgeInsets(
+                top: -_marginTop,
+                left: -_marginLeft,
+                bottom: -_marginBottom - bottomOffset,
+                right: -_marginRight - rightOffset
+            )
+            autoSizeCalculable.setAutoSizingRect(newRect, margins: autoSizingInsets)
         } else {
             view.setRect(newRect, keepTransform: keepTransform)
         }
