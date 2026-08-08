@@ -155,20 +155,20 @@ jobs:
       #       | xcpretty
       #     cd ../../..
 
-      # - name: Test Carthage Integration
-      #   run: |
-      #     cd TestProjects/carthage/ios
-      #     rm Cartfile
-      #     echo "git \"file:///$GITHUB_WORKSPACE\"" > Cartfile
-      #     carthage update --use-ssh --platform iOS --use-xcframeworks
-      #     set -o pipefail && xcodebuild build \
-      #       -project PinLayout-Carthage-iOS.xcodeproj \
-      #       -scheme PinLayout-Carthage-iOS \
-      #       -sdk iphonesimulator \
-      #       -destination "platform=iOS Simulator,name=${{ env.IOS_SIMULATOR_DEVICE }},OS=${{ env.IOS_SIMULATOR_OS }}" \
-      #       | xcpretty
-      #     rm Cartfile.resolved
-      #     cd ../../..
+      - name: Test Carthage Integration
+        run: |
+          cd TestProjects/carthage/ios
+          rm Cartfile
+          echo "git \"file:///$GITHUB_WORKSPACE\" \"$GITHUB_SHA\"" > Cartfile
+          carthage update --use-ssh --platform iOS --use-xcframeworks
+          set -o pipefail && xcodebuild build \
+            -project PinLayout-Carthage-iOS.xcodeproj \
+            -scheme PinLayout-Carthage-iOS \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,name=${{ env.IOS_SIMULATOR_DEVICE }},OS=${{ env.IOS_SIMULATOR_OS }}" \
+            | xcpretty
+          rm Cartfile.resolved
+          cd ../../..
 
       - name: Swift Package Manager - iOS Empty project
         run: |
