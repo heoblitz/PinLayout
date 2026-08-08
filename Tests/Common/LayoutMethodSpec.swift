@@ -77,5 +77,56 @@ class LayoutMethodSpec: QuickSpec {
                 expect(Pin.lastWarningText).to(contain(["PinLayout commands have been issued without calling the 'layout()' method"]))
             }
         }
+
+        #if os(iOS) || os(tvOS)
+        describe("autoSizeThatFits()") {
+            it("should include edge offsets in the resulting size") {
+                defer { Pin.layoutDirection(.auto) }
+
+                let bView = BasicView()
+                rootView.addSubview(bView)
+
+                let aViewFrame = aView.frame
+                let bViewFrame = bView.frame
+                let availableSize = CGSize(width: 400, height: 400)
+
+                func performLayout() {
+                    aView.pin.size(50).start(16).top(16).bottom(16)
+                    bView.pin.size(50).top(16).end(16).bottom(16)
+                }
+
+                func autoSizedResult() -> CGSize {
+                    return rootView.autoSizeThatFits(availableSize, layoutClosure: performLayout)
+                }
+
+                Pin.layoutDirection(.ltr)
+                let size = autoSizedResult()
+                expect(size).to(equal(CGSize(width: 400, height: 82)))
+
+                expect(aView.frame).to(equal(aViewFrame))
+                expect(bView.frame).to(equal(bViewFrame))
+
+                rootView.frame = CGRect(origin: .zero, size: size)
+                performLayout()
+                expect(aView.frame).to(equal(CGRect(x: 16, y: 16, width: 50, height: 50)))
+                expect(bView.frame).to(equal(CGRect(x: 334, y: 16, width: 50, height: 50)))
+
+                Pin.layoutDirection(.rtl)
+                expect(autoSizedResult()).to(equal(size))
+
+                performLayout()
+                expect(aView.frame).to(equal(CGRect(x: 334, y: 16, width: 50, height: 50)))
+                expect(bView.frame).to(equal(CGRect(x: 16, y: 16, width: 50, height: 50)))
+            }
+
+            it("should preserve negative leading edge offsets") {
+                let size = rootView.autoSizeThatFits(CGSize(width: 400, height: 400)) {
+                    aView.pin.left(-10).top(-20).size(50)
+                }
+
+                expect(size).to(equal(CGSize(width: 50, height: 50)))
+            }
+        }
+        #endif
     }
 }
