@@ -69,14 +69,30 @@ jobs:
             -destination "platform=iOS Simulator,name=${{ env.IOS_SIMULATOR_DEVICE }},OS=${{ env.IOS_SIMULATOR_OS }}" \
             | xcpretty
 
-      # - name: tvOS Unit Tests
-      #   run: |
-      #     set -o pipefail && xcodebuild build test \
-      #       -workspace PinLayout.xcworkspace \
-      #       -scheme PinLayout-tvOS \
-      #       -sdk appletvsimulator \
-      #       -destination "platform=tvOS Simulator,name=${{ env.TVOS_SIMULATOR_DEVICE }},OS=${{ env.TVOS_SIMULATOR_OS }}" \
-      #       | xcpretty
+      - name: tvOS Unit Tests
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -workspace PinLayout.xcworkspace \
+            -scheme Pods-PinLayoutTests-tvOS \
+            -sdk appletvsimulator \
+            -destination "platform=tvOS Simulator,name=${{ env.TVOS_SIMULATOR_DEVICE }},OS=${{ env.TVOS_SIMULATOR_OS }}" \
+            -derivedDataPath /tmp/PinLayout-tvOS \
+            | xcpretty
+          xcodebuild build \
+            -workspace PinLayout.xcworkspace \
+            -scheme PinLayout-tvOS \
+            -sdk appletvsimulator \
+            -destination "platform=tvOS Simulator,name=${{ env.TVOS_SIMULATOR_DEVICE }},OS=${{ env.TVOS_SIMULATOR_OS }}" \
+            -derivedDataPath /tmp/PinLayout-tvOS \
+            | xcpretty
+          xcodebuild test \
+            -workspace PinLayout.xcworkspace \
+            -scheme PinLayout-tvOS \
+            -sdk appletvsimulator \
+            -destination "platform=tvOS Simulator,name=${{ env.TVOS_SIMULATOR_DEVICE }},OS=${{ env.TVOS_SIMULATOR_OS }}" \
+            -derivedDataPath /tmp/PinLayout-tvOS \
+            | xcpretty
       
       - name: macOS Unit Tests
         run: |
